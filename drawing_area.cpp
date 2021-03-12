@@ -5,6 +5,7 @@
 #include <QRandomGenerator>
 
 #include "basetree.h"
+#include "RandTree.h"
 #include "treeofsearch.h"
 #include "balancedtreeofsearch.h"
 
@@ -20,7 +21,7 @@ drawing_area::drawing_area(QWidget *parent) : QWidget(parent)
     this->setPalette(QPalette(QPalette::Background,Qt::white));
 
     // создаем деревья
-    // rand_tree = new RandTree<int>;
+    rand_tree = new RandTree<int>;
     search_tree = new TreeOfSearch<int>;
     balanced_tree = new BalancedTreeOfSearch<int>;
     active_tree = reinterpret_cast<BaseTree<int>**>(&search_tree);
@@ -159,14 +160,13 @@ void drawing_area::find_value(int value)
         }
 
         // записываем координаты найденой вершины
+        // говорим, нашли ли мы вершину или нет
         if(iter.first)
         {
             mark_node_value = value;
             mark_node_rect = iter.second;
-        }
-        // говорим, нашли ли мы вершину или нет
-        if(iter.first)
             some_marked_node = true;
+        }
     }
     emit update();
 }
@@ -232,8 +232,8 @@ void drawing_area::set_tree()
     // определяем какая кнопка дала сигнал
     // выбираем дерево
     QString tree_name = QObject::sender()->objectName();
-//    if(tree_name == "rand_tree")
-//        active_tree = reinterpret_cast<BaseTree<int>**>(&rand_tree);
+    if(tree_name == "rand_tree")
+        active_tree = reinterpret_cast<BaseTree<int>**>(&rand_tree);
     if(tree_name == "search_tree")
         active_tree = reinterpret_cast<BaseTree<int>**>(&search_tree);
     if(tree_name == "balanced_tree")
@@ -275,6 +275,10 @@ drawing_area::~drawing_area()
     if(balanced_tree){
         delete balanced_tree;
         balanced_tree = nullptr;
+    }
+    if(rand_tree){
+        delete rand_tree;
+        rand_tree = nullptr;
     }
     active_tree = nullptr;
 }

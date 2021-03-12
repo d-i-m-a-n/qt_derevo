@@ -5,7 +5,7 @@
 #include "basetree.h"
 
 
-template<class X> class RandTree:public BaseTree<X>
+template<class X> class RandTree : public BaseTree<X>
 {
 public:
     RandTree(){}
@@ -18,11 +18,11 @@ public:
 
     virtual bool FindNode(X &);
 
-    virtual X FindMax();
+    virtual X FindMax(){}
 
-    virtual X FindMin();
+    virtual X FindMin(){}
 
-    virtual ~RandTree();
+    virtual ~RandTree(){}
 
 private:
 
@@ -30,7 +30,7 @@ private:
 
 template<class X> bool RandTree<X>::AddNode(X &value)
 {
-    typename RandTree<X>::BaseNode** ptr = &RandTree<X>::root;
+    typename BaseTree<X>::BaseNode** ptr = &(BaseTree<X>::root);
 
     while(*ptr)
     {
@@ -49,8 +49,8 @@ template<class X> bool RandTree<X>::DelNode(X &value)
 {
     if(RandTree<X>::root)
     {
-        typename RandTree<X>::BaseNode** iter = &RandTree<X>::root;
-        std::stack<RandTree<X>**> buf_nodes;
+        typename BaseTree<X>::BaseNode** iter = &(BaseTree<X>::root);
+        std::stack<typename BaseTree<X>::BaseNode **> buf_nodes;
         buf_nodes.push(nullptr);
 
         while(iter && (*iter)->data != value)
@@ -86,13 +86,13 @@ template<class X> bool RandTree<X>::DelNode(X &value)
 
             if(ptr_2)
             {
-                typename RandTree<X>::BaseNode** ptr= &RandTree<X>::root;
+                typename BaseTree<X>::BaseNode** ptr= &(BaseTree<X>::root);
                 while(*ptr)
                 {
                     if(rand()%2)
-                        ptr = (*ptr)->lt;
+                        ptr = &((*ptr)->lt);
                     else
-                        ptr = (*ptr)->rt;
+                        ptr = &((*ptr)->rt);
                 }
                 (*ptr) = ptr_2;
             }
@@ -106,7 +106,7 @@ template<class X> bool RandTree<X>::DelNode(X &value)
 template<class X> bool RandTree<X>::FindNode(X &value)
 {
     typename RandTree<X>::BaseNode* iter = RandTree<X>::root;
-    std::stack<RandTree<X>*> buf_nodes;
+    std::stack<typename BaseTree<X>::BaseNode*> buf_nodes;
     buf_nodes.push(nullptr);
 
     while(iter && iter->data != value)
